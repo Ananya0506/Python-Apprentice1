@@ -6,10 +6,10 @@ Multiple Night Check in
 Add 1 new feature of your choice
 Ex. Upgrade room, room service, spa package, etc. """
 
-roomTypeToRoomNum = {"1": [100,101,102,103,104],
-                     "2": [200,201,202,203,204],
-                     "3": [300,301,302,303,304],
-                     "4": [400,401,402,403,404]
+roomTypeToRoomNum = {1: [100,101,102,103,104],
+                     2: [200,201,202,203,204],
+                     3: [300,301,302,303,304],
+                     4: [400,401,402,403,404]
                      }
 roomNumtoAvail = {100 : True,
                   101 : True,
@@ -33,7 +33,11 @@ roomNumtoAvail = {100 : True,
                   404 : True
                   }
 
-roomNumToRes = {}
+roomNumToRes = {
+    room: ["Empty", 0, 0, 0] 
+    for room in range(100, 405) 
+    if room % 100 <= 4
+}
 
         
         
@@ -43,31 +47,45 @@ roomNumToRes = {}
 def checkIn():
     print("We are so glad you will be staying at L'Hotel de Poosh!")
     name = input("What is your name for this reservation?")
-    room = input("Which room would you like?\nPress one for Standard Room.\nPress 2 for Deluxe Room.\nPress 3 for Executive Suite.\nPress 4 for our world class Presidential suite!\nPress 5 if you want to book multiple rooms.")
+    roomType = int(input("Which room would you like?\nType 1 for Standard Room.\nType 2 for Deluxe Room.\nType 3 for Executive Suite.\nType 4 for our world class Presidential suite!\nType 5 if you want to book multiple rooms."))
     nights = int(input("How many nights will you be staying here for?"))
-    if(room == "1"):
+    if roomType == 1:
         print("We are delighted to have you with us! Your Standard Room is all ready for you, featuring a comfortable queen-size bed, a modern private bathroom, and high-speed Wi-Fi to keep you connected.")
-        money = 100000*nights
-    if(room == "2"):
+        num = getAvailRoomNumandSetUnavail(roomType)
+        print("Your room number is ", num )
+        roomNumToRes[num] = [name, nights, 100000 * nights, 0]
+
+        
+    if roomType == 2:
         print("Welcome to the hotel! We have you all set up in one of our beautiful Deluxe Rooms. You'll love the extra space and the upgraded view. We've also included premium bath amenities and a fully stocked Nespresso machine for your stay.")
-        money = 1000000*nights
-    if(room == "3"):
+        num = getAvailRoomNumandSetUnavail(roomType)
+        print("Your room number is ", num )
+        roomNumToRes[num] = [name, nights, 1000000 * nights, 0]
+    if roomType == 3:
         print("Welcome! It is an absolute pleasure to have you with us. We have you checked into one of our Executive Suites, which features your separate living area and a dedicated workspace. Your stay also includes complimentary access to our Executive Lounge for breakfast and evening cocktails.")
-        money = 10000000*nights
-    if(room == "4"):
-        print("Welcome to the hotel, Mr./Ms. " + name + ". It is an absolute honor to have you with us. We have your Presidential Suite completely prepared. As our premier guest, your private butler is available 24/7 to handle everything from unpacking to securing exclusive dining reservations.")
-        money = 100000000*nights
-    roomNumToRes.put()
+        num = getAvailRoomNumandSetUnavail(roomType)
+        print("Your room number is ", num )
+        roomNumToRes[num] = [name, nights, 10000000 * nights, 0]
+    if roomType == 4:
+        print("Welcome to the hotel, Mr./Ms. " + name + ". It is an absolute honor to have you with us. We have your Presidential Suite completely prepared. As one of our premier guests, your private butler is available 24/7 to handle everything from unpacking to securing exclusive dining reservations.")
+        num = getAvailRoomNumandSetUnavail(roomType)
+        print("Your room number is ", num )
+        roomNumToRes[num] = [name, nights, 100000000 * nights, 0]
+    
+
+def checkOut():
+    print("Thanks for staying at L'Hotel de Poosh! We hope you enjoyed your time here!")
+    name2 = input("What is your name for the reservation?")
+    print("Your total charge for the room(s) and extra services/amenities is _______________ dollars. Press 'OK' to pay!")
+
 
 def getAvailRoomNumandSetUnavail(roomType):
-    nums = roomTypeToRoomNum.get(roomType)
-    for num in nums:
-        isAvail = roomNumtoAvail.get(num)
-        if(isAvail == True):
-
-            roomNumtoAvail.put(num,False)
-            return num
-        
+    for roomNum in roomTypeToRoomNum[roomType]:
+        if roomNumtoAvail[roomNum] == True:
+            roomNumtoAvail[roomNum] = False
+            return roomNum
+        else:
+            print("oh no, we are completely full! you can check into a different room type or wait until the next room is available.")
 
 
 while(True):
@@ -77,6 +95,8 @@ while(True):
         break
     elif choice == "1":
         checkIn()
+    elif choice == "2":
+        checkOut()
         
         
         
